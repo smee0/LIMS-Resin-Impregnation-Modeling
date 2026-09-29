@@ -1,1 +1,99 @@
+PROC simu
 
+  DEFINT TopIndex, BottomIndex, TopNode, BottomNode, FlowFile
+  DEFDBL DX, TopDistance, BottomDistance, NextTime
+
+  LET DX = 0.0005
+  LET TopIndex = 0
+  LET BottomIndex = 0
+
+  LET TopDistance = 0.0
+  LET BottomDistance = 0.0
+
+  LET NextTime = 1.0
+
+  LET FlowFile = FIFREEFILE()
+  FIOPEN FlowFile, "flow_front_part_dm_49cm.txt", "W"
+
+  FIPRINT FlowFile, "Time(s) TopFront(m) BottomFront(m)"
+  FIPRINTNL FlowFile
+
+  DO
+
+    SOLVE
+
+    IF SOCURRENTTIME() >= NextTime THEN
+
+      DO
+
+        EXITIF TopIndex >= 1400
+
+        LET TopNode = 11 + 11*(TopIndex + 1)
+
+        EXITIF SOFILLFACTOR(TopNode) <= 0.99
+
+        LET TopIndex = TopIndex + 1
+        LET TopDistance = TopIndex*DX
+
+      LOOP WHILE (TopIndex < 1400)
+
+
+      DO
+
+        EXITIF BottomIndex >= 1400
+
+        LET BottomNode = 1 + 11*(BottomIndex + 1)
+
+        EXITIF SOFILLFACTOR(BottomNode) <= 0.99
+
+        LET BottomIndex = BottomIndex + 1
+        LET BottomDistance = BottomIndex*DX
+
+      LOOP WHILE (BottomIndex < 1400)
+
+
+      FIPRINT FlowFile, SOCURRENTTIME(), " ", TopDistance, " ", BottomDistance
+      FIPRINTNL FlowFile
+
+      LET NextTime = NextTime + 1.0
+
+    ENDIF
+
+    EXITIF 0
+
+  LOOP WHILE ((SONUMBEREMPTY() > 0) AND (SONUMBERFILLED() > 0))
+
+  FICLOSE FlowFile
+
+  ERASE TopIndex, BottomIndex, TopNode, BottomNode, FlowFile
+  ERASE DX, TopDistance, BottomDistance, NextTime
+
+ENDPROC
+
+
+CHANGEDIR "C:/Users/emtiaz/Desktop/Courses/TA_Fall_26/LIMS permeability model/"
+READ "part_dm_49cm.dmp"
+
+SETGATE 1, 1, 1.000000e+005
+SETGATE 2, 1, 1.000000e+005
+SETGATE 3, 1, 1.000000e+005
+SETGATE 4, 1, 1.000000e+005
+SETGATE 5, 1, 1.000000e+005
+SETGATE 6, 1, 1.000000e+005
+SETGATE 7, 1, 1.000000e+005
+SETGATE 8, 1, 1.000000e+005
+SETGATE 9, 1, 1.000000e+005
+SETGATE 10, 1, 1.000000e+005
+SETGATE 11, 1, 1.000000e+005
+
+CALL simu
+
+PRINT "# empty nodes =", SONUMBEREMPTY()
+
+SETOUTTYPE "dump"
+CHANGEDIR "C:/Users/emtiaz/Desktop/Courses/TA_Fall_26/LIMS permeability model"
+WRITE "part_dm_49cm_res1.dmp"
+
+SETOUTTYPE "gmsh"
+CHANGEDIR "C:/Users/emtiaz/Desktop/Courses/TA_Fall_26/LIMS permeability model"
+WRITE "part_dm_49cm_res1.msh"
