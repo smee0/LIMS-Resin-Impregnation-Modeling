@@ -1,1 +1,45 @@
+INSIUNITS
+
+#Material
+VAR Kxx 8e-11
+VAR Kzz 7.5e-13
+VAR Phi 0.55
+VAR Vf 1.0 - Phi
+
+#Dimensions
+VAR L 0.7
+VAR LDM 0.49
+VAR H 0.005
+VAR thick 1.000
+
+
+QUAD
+0.0 0.0 0.0
+L 0.0 0.0
+L H 0.0
+0.0 H 0.0
+1400 10
+Vf
+thick
+Kxx 0.0 Kzz
+0
+
+
+# optional dm model
+
+VAR HDM 0.001
+VAR ADM HDM * thick
+VAR KDM 1e-9
+
+BAR
+0.0 H 0.0
+LDM H 0.0
+780
+0.2
+ADM 
+KDM
+
+VISCOSITY 0.234
+
+END
 
