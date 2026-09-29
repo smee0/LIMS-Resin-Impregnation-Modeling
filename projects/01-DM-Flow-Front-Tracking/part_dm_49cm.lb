@@ -71,7 +71,7 @@ PROC simu
 ENDPROC
 
 
-CHANGEDIR "C:/Users/emtiaz/Desktop/Courses/TA_Fall_26/LIMS permeability model/"
+CHANGEDIR "Dir"
 READ "part_dm_49cm.dmp"
 
 SETGATE 1, 1, 1.000000e+005
@@ -91,9 +91,9 @@ CALL simu
 PRINT "# empty nodes =", SONUMBEREMPTY()
 
 SETOUTTYPE "dump"
-CHANGEDIR "C:/Users/emtiaz/Desktop/Courses/TA_Fall_26/LIMS permeability model"
+CHANGEDIR "Dir"
 WRITE "part_dm_49cm_res1.dmp"
 
 SETOUTTYPE "gmsh"
-CHANGEDIR "C:/Users/emtiaz/Desktop/Courses/TA_Fall_26/LIMS permeability model"
+CHANGEDIR "Dir"
 WRITE "part_dm_49cm_res1.msh"
